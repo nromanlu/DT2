@@ -1,0 +1,108 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Key Concept I        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Key Concept I \tiny Hierarchie und konektivität}
+
+\subsection{Library}
+
+\begin{minipage}{0.519\textwidth}
+	\begin{tabular}{l l}
+		\multicolumn{2}{l}{$\cdot$ bereits kompiliert} \\
+		\multicolumn{2}{l}{$\cdot$ kann Komponente und/oder Packages enthalten} \\
+		$\cdot$ work {\tiny Arbeitsbibliothek} 		& : immer vorhanden {\tiny(wird automatisch generiert)}\\
+		$\cdot$ std {\tiny Standartfunktionen} 		& : im IEEE 1076 spezifiziert {\tiny(BIT, INTEGER, ...)}\\
+		$\cdot$ ieee {\tiny Praktische Packages}	& : z.B. std\_logic \\
+		$\cdot$ PLD, ... {\tiny Hersteller Lib.} 	& : Beschreibung spezifischer Elemente \\
+\end{tabular}
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+	\begin{VHDL}
+-- deklaration der Bibliotek
+library ieee;	
+-- Konstante aus Bibliothek lesen
+<variable>:=<library_name>.<consr_name>;
+-- Bibliothek sichtbar machen
+use <library_name>.<package_name>.<element_name>; -- oder
+use <library_name>.all;
+	\end{VHDL}
+\end{minipage}
+
+\newpage
+%--------------------------------------------------------------------------------------
+\subsection{Entity}
+
+\begin{minipage}{0.519\textwidth}
+	\begin{tabular}{l l}
+		$\cdot$ Port 	& : alle digitale Signale, die von aussen sichtbar sind\\
+		$\cdot$ Mode	& : in oder out - Ein- Ausgangssignale\\
+						& . buffer - zurückführende Ausgangssignale\\
+						& . inout - bidirektionale Signale z.B. Busse\\
+		$\cdot$ Type 	& : bit, bit\_vector, std\_logic, ... \\
+\end{tabular}
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+	\begin{VHDL}
+-- Syntax
+entity <ENTITY_NAME> is
+	port (
+		{<PORT_NAME>: <mode> <type>;}
+	);
+end <ENTITY_NAME>;	
+	\end{VHDL}
+\end{minipage}
+%--------------------------------------------------------------------------------------
+\subsection{Architecture}
+
+\begin{minipage}{0.519\textwidth}
+	\begin{tabular}{l l}
+		\multicolumn{2}{l}{	mögliche architecture\_names:} \\
+		$\cdot$ Behavioral 	& : Verhaltensbeschreibung {\tiny(ähnlich wie Prog.sprachen)}\\
+		$\cdot$ Structural	& : Strukturbeschreibung {\tiny(Schaltschema beschrieben)}\\
+		$\cdot$ TB 			& : Test-Bench \\
+		& \\
+		& \\
+\end{tabular}
+
+
+\textbf{Beispiel für Structural}
+
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+	\begin{VHDL}
+-- Syntax
+architecture <architecture_name> of <entity_name> is
+	[Type_,Subtype_,Constant_,Signal_,Component_declaration]
+begin
+	{architecture_body: concurrent actions}
+end [architecture_name];	
+	\end{VHDL}
+\end{minipage}
+
+\begin{minipage}{0.01\textwidth}
+	\text{ } %platzhalter
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+	\begin{VHDL}
+-- Deklaration
+component <component_name>
+	port (
+		{port_name: <port_mode><port_type>});
+end component;
+
+signal <internal_signal_name>: <sygnal_type>;	
+	\end{VHDL}
+\end{minipage}
+\begin{minipage}{0.02\textwidth}
+	\text{ } %platzhalter
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+	\begin{VHDL}
+-- Initialisierung
+<instance_name>: <component_name>
+	port map (	-- explizit
+		<instance_port_name> => <external_signal_name>,
+		<instance_port2_name> => <external_signal2_name>);	
+		-- or implizit
+		(<external_signal_name>, <external_signal2_name>)
+	\end{VHDL}
+\end{minipage}

@@ -1,0 +1,306 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beispiele       
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Beispiele}
+
+ \lstset{
+   	backgroundcolor=\color{grey},   % choose the background color
+     language=VHDL,			
+     basicstyle=\footnotesize\ttfamily,
+     breaklines=true,
+     frame=none,
+     columns=flexible,
+     keepspaces=true,
+     keywordstyle=\color{blue},
+     identifierstyle=\color{royalblue},
+     commentstyle=\color{green},
+     numbers=left,
+     numbersep=5pt,
+     numberstyle=\tiny\color{gray2},
+     rulecolor=\color{black}, 
+     stepnumber=1,
+     tabsize=4,
+     }
+
+\begin{minipage}{0.01\textwidth}
+	\text{ } %platzhalter
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+	\begin{lstlisting}
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.math_real.all;
+
+entity edgedetpos_random_tb is
+end edgedetpos_random_tb;
+
+architecture tb of edgedetpos_random_tb is
+	constant f : integer := 1000;       -- Frequency in HZ
+	constant T : time    := 1 sec / f;
+
+	component edgedetpos
+		port(
+			clk  : in  std_ulogic;
+			nrst : in  std_ulogic;
+			inp  : in  std_ulogic;
+			oup  : out std_ulogic
+		);
+	end component;
+
+	for all : edgedetpos use entity work.edgedetpos(behavioral);
+
+	signal clk_tb     : std_ulogic;
+	signal nrst_tb    : std_ulogic;
+	signal inp_tb     : std_ulogic;
+	signal oup_tb     : std_ulogic;
+	signal oup_exp_tb : std_ulogic;
+
+begin
+	dut : edgedetpos
+		port map(
+			clk  => clk_tb,
+			nrst => nrst_tb,
+			inp  => inp_tb,
+			oup  => oup_tb
+		);
+
+	stimuli_clk : process
+	begin
+		clk_tb <= '0';
+		wait for T / 2;
+		clk_tb <= '1';
+		wait for T / 2;
+	end process;
+
+	stimuli_nrst : nrst_tb <= '0', '1' after 3 ms;
+	
+	stimuli_inp : process
+		variable t      : time;
+		variable t_real : real;
+		variable seed1  : positive := 1;
+		variable seed2  : positive := 1;	
+	\end{lstlisting}
+\end{minipage}
+\begin{minipage}{0.02\textwidth}
+	\text{ } %platzhalter
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+	\begin{lstlisting}[firstnumber=last]
+	begin
+		inp_tb <= '0';
+		loop
+			UNIFORM(seed1, seed2, t_real);
+			t := (t_real * 0.007) * 1 sec;
+			wait for t;
+			inp_tb <= not inp_tb;
+		end loop;
+	end process;
+	
+stimuli_oup_exp : process
+	begin
+		loop
+			oup_exp_tb <= '0';
+			if (nrst_tb = '0') then
+				wait until (nrst_tb'event and nrst_tb = '1');
+				wait until (clk_tb'event and clk_tb = '1');
+			end if;
+			if (inp_tb = '0') then
+				while (inp_tb = '0') loop
+					wait until (clk_tb'event and clk_tb='1');
+				end loop;
+				oup_exp_tb <= '1';
+				wait until (clk_tb'event and clk_tb = '1');
+				oup_exp_tb <= '0';
+			else
+				wait until (clk_tb'event and clk_tb = '1');
+			end if;
+		end loop;
+		wait;
+	end process;
+
+	evaluation : process
+	begin
+		wait until (clk_tb'event and clk_tb = '1');
+		wait for 0.5 us;
+		loop
+			assert (oup_exp_tb = oup_tb) report "Error oup" severity error;
+			wait for 1 us;
+		end loop;
+		wait;
+	end process;
+
+end tb;
+
+
+
+
+
+
+
+
+	\end{lstlisting}
+\end{minipage}
+
+\begin{minipage}{0.01\textwidth}
+	\text{ } %platzhalter
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+	\begin{lstlisting}
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity edgedetpos is
+	port(
+		clk  : in  std_ulogic;
+		nrst : in  std_ulogic;
+		inp  : in  std_ulogic;
+		oup  : out std_ulogic
+	);
+end;
+
+architecture behavioral of edgedetpos is
+	type state_type is (resetstate, wait_for_1, pulse, wait_for_0);
+
+	signal present_state : state_type;
+	signal next_state    : state_type;
+
+begin
+	-- short form for output logic. Code version with process: see edgedetneg
+	Output_logic:	oup <= '1' when present_state = pulse else '0';
+
+	Next_state_logic : process(inp, present_state)
+	begin
+		next_state <= wait_for_0;       -- default state
+		case present_state is
+			when wait_for_1 =>
+				if (inp = '1') then
+					next_state <= pulse;
+				else
+					next_state <= wait_for_1;
+				end if;
+			when pulse =>
+				if (inp = '0') then
+					next_state <= wait_for_1;
+				-- else						-- due to default
+				-- next_state <= wait_for_0;
+				end if;
+			when wait_for_0 =>
+				if (inp = '0') then
+					next_state <= wait_for_1;
+				-- else
+				-- next_state <= wait_for_0;
+				end if;
+			when others =>
+				if (inp = '0') then
+					next_state <= wait_for_1;
+				-- else
+				-- next_state <= wait_for_0;
+				end if;
+		end case;
+	end process;
+
+	registers : process(nrst, clk)
+	begin
+		if (nrst = '0') then
+			present_state <= resetstate;
+		elsif (clk = '1') and clk'event then
+			present_state <= next_state;
+		end if;
+	end process;
+
+end behavioral;
+	\end{lstlisting}
+	\begin{lstlisting}
+entity BUS_DRIVER is
+port(
+	sel: 		in std_ulogic;
+	data_out: 	in std_ulogic_vector(7 downto 0);
+	my_bus: 	inout std_logic_vector(7 downto 0);
+	data_in: 	out std_ulogic_vector(7 downto 0));
+end BUS_DRIVER;
+	\end{lstlisting}
+\end{minipage}
+\begin{minipage}{0.02\textwidth}
+	\text{ } %platzhalter
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+	\begin{lstlisting}[firstnumber=last]
+architecture TEST of BUS_DRIVER is
+
+begin
+    
+-- Bus_Komponente
+	READ: data_in <= to_stdulogicVector(my_bus);
+	WRITE: process(sel, data_out)
+		begin
+			if sel = '1' then my_bus <= To_StdLogicVector(data_out);
+			else my_bus <= 	(others => 'Z');
+		end if;
+	end process WRITE;
+
+end Test;	
+	\end{lstlisting}
+	\begin{lstlisting}
+entity mux3x8_top is
+	port(
+		sel  : in  bit_vector(1 downto 0);
+		inp0 : in  bit_vector(7 downto 0);
+		inp1 : in  bit_vector(7 downto 0);
+		inp2 : in  bit_vector(7 downto 0);
+		oup  : out bit_vector(7 downto 0));
+end mux3x8_top;
+
+architecture RTL of mux3x8_top is
+	component mux3x8
+		port(sel  : in  bit_vector(1 downto 0);
+			 inp0 : in  bit_vector(7 downto 0);
+			 inp1 : in  bit_vector(7 downto 0);
+			 inp2 : in  bit_vector(7 downto 0);
+			 oup  : out bit_vector(7 downto 0));
+	end component mux3x8;
+
+	for all: mux3x8 use entity work.mux3x8(PROCESS_IF_NO_Default); 
+begin
+	 U1: mux3x8
+	 	port map(sel  => sel,
+	 		     inp0 => inp0,
+	 		     inp1 => inp1,
+	 		     inp2 => inp2,
+	 		     oup  => oup);
+end architecture RTL;	
+	\end{lstlisting}
+	\begin{lstlisting}
+entity or2 is
+  port(
+    a, b : in bit;
+    y : out bit);
+  end;
+
+architecture behavioral of or2 is
+begin
+   y <= a or b;
+end behavioral;
+	\end{lstlisting}
+	\begin{lstlisting}
+-- Beispiel ENUM ENCODING
+type STATE_TYPE is (ST_NORMAL, ST_HSET, ST_MSET, ST_SSYNC);
+-- Explizite codierung mit ENUM_ENCODING
+attribute ENUM_ENCODING: STRING;
+attribute ENUM_ENCODING of STATE_TYPE:
+	type is "0001 0010 0100 1000"; -- one hot
+signal PRESENT_State, NEXT_State : STATE_TYPE;
+
+				--------------------------
+				-- State     | Encoding --
+				-------------|------------
+				-- st_normal | 0001     --
+				-- st_hset   | 0010     --
+				-- st_mset   | 0100     --
+				-- st_ssync  | 1000     --
+				--------------------------
+	\end{lstlisting}
+\end{minipage}
+
+
+
+

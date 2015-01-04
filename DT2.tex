@@ -1,0 +1,60 @@
+%Dokumentinformationen
+\newcommand{\titleinfo}{DT2 \_ VHDL - Zusammenfassung}
+\newcommand{\authorinfo}{Nicol\'{a}s Rom\'{a}n L\"{u}thold}
+\newcommand{\versioninfo}{$Revision V1.1: $ \today}
+\newcommand{\verbesserung}{Verbesserungen und Fehler Bitte an: nromanlu@hsr.ch melden}
+
+% standard header
+\include{header} % ./header.tex nicht editieren (Projekt LaTeX-Header benutzen)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Neue Befehle und Definitionen                
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolor{black}{rgb}{0,0,0}
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{white}{rgb}{1,1,1}
+\definecolor{grey}{rgb}{0.9,0.9,0.9}
+\definecolor{gray2}{rgb}{0.5,0.5,0.5}
+\definecolor{royalblue}{rgb}{0.15,0.25,0.55}
+\definecolor{green}{rgb}{0,0.6,0}
+
+\newcommand{\verweis}[2]{\small{(siehe auch \ref{#1}, #2 (S. \pageref{#1}))}}
+\newcommand{\subsubadd}[1]{\textcolor{black}{\mbox{#1}}}
+
+% für VHDL-Code
+\lstnewenvironment{VHDL}[1][]
+  {\lstset{
+  	backgroundcolor=\color{grey},   % choose the background color
+    language=VHDL,			
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true,
+    frame=none,
+    columns=flexible,
+    keepspaces=true,
+    keywordstyle=\color{blue},
+    identifierstyle=\color{royalblue},
+    commentstyle=\color{green},
+    numbers=left,
+    numbersep=5pt,
+    numberstyle=\tiny\color{gray2},
+    rulecolor=\color{black}, 
+    stepnumber=1,
+    tabsize=4,
+  }}{}
+  
+
+
+\begin{document}
+
+\input{Grundlagen}
+\input{Desigen}
+\input{VHDL}
+\input{KeyConcept_I}
+\input{KeyConcept_II}
+\input{KeyConcept_III}
+\input{ArithmetikDatentypen}
+\input{KeyConcept_IV}
+\input{KeyConcept_V}
+\input{Beispiele}
+
+\end{document}

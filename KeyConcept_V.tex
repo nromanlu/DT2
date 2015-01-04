@@ -1,0 +1,106 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Key Concept V       
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Key Concept V \tiny Parametisierbarkeit von Modellen}
+
+\begin{minipage}{0.01\textwidth}
+	\text{ } %platzhalter
+\end{minipage}
+\begin{minipage}{0.38\textwidth}
+
+	Das Ziel von Parametern und Modellen ist es, dass man einen ähnlichen block wiederverwerten kann. z.B wenn man einen Zähler macht der auf 100 zählt, währe es schön wenn man den selben "`Block"' auch für einen der auf 230 zählt brauchen kann. 
+	
+	\begin{VHDL}
+-- Entidy declaration mit generic Parameter:
+entity entity_name is
+    generic	({generic_name: type_name [:= default_value]}); 
+	port  	(port_list);
+end entity_name;
+
+-- Component Declaration mit generic Parameter
+component component_name
+	generic	(generic_list);
+	port	(port_list);
+end component;
+	\end{VHDL}
+\end{minipage}
+\begin{minipage}{0.02\textwidth}
+	\text{ } %platzhalter
+\end{minipage}
+\begin{minipage}{0.58\textwidth}
+	\begin{VHDL}
+-- Zaehler Beispiel:
+entity count_x is
+	generic (max_count : integer := 127);
+	port	(clk, rst, ena	: in std_logig;
+			 oup			: out std_logic_vector
+			 		(integer(ceil(log2(real(max_count)))) -1 downto 0));
+end count_x
+
+architecture RTL of count_x is 
+	constant word_with: integer :=(integer(ceil(log2(real(max_count)))));
+	signal present_count, next_count : unsigned(word_width-1 downto 0);
+	
+begin
+	output_logic : oup <= std_logic_vector(present_count);	
+	
+	next_state_logic: process(present_count_ ena)
+	begin
+		next_count <= present_count;
+		if ((present_count = max_cpunt) and (ena = '1')) then 
+			next_count <= (others => '0');
+		elsif (ena = '1') then next_count <= present_count + 1;
+		end if;
+	end process;
+	-- Fortsetzung auf naechster Seite
+\end{VHDL}
+\end{minipage}
+
+\begin{minipage}{0.01\textwidth}
+	\text{ } %platzhalter
+\end{minipage}
+\begin{minipage}{0.38\textwidth}
+	\begin{tabular}{l l}
+		\multicolumn{2}{l}{\textbf{Fixierung von Designparameter}}  \\
+		& \\
+		Parameter zu Designzeit		& : Konstanten \\
+		Parameter zu Compilezeit	& : Generic \\
+		Parameter zu Laufzeit		& : Signale \\
+	\end{tabular}
+\end{minipage}
+\begin{minipage}{0.02\textwidth}
+	\text{ } %platzhalter
+\end{minipage}
+\begin{minipage}{0.58\textwidth}
+
+	 \lstset{
+	   	backgroundcolor=\color{grey},   % choose the background color
+	     language=VHDL,			
+	     basicstyle=\footnotesize\ttfamily,
+	     breaklines=true,
+	     frame=none,
+	     columns=flexible,
+	     keepspaces=true,
+	     keywordstyle=\color{blue},
+	     identifierstyle=\color{royalblue},
+	     commentstyle=\color{green},
+	     numbers=left,
+	     numbersep=5pt,
+	     numberstyle=\tiny\color{gray2},
+	     rulecolor=\color{black}, 
+	     stepnumber=1,
+	     tabsize=4,
+	     }
+
+	\begin{lstlisting}[firstnumber=last]
+-- Fortsetzung:
+	register : process(clk, rst)
+	begin 
+		if (rst = '1') then present_count <= (others => '0');
+		elsif (clk'event and (clk = '1')) then present_count <= next_count;
+		end if;
+	end process;
+end architecture RTL;
+\end{lstlisting}
+\end{minipage}

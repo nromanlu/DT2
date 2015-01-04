@@ -1,0 +1,69 @@
+%Schriftgrösse, Layout, Papierformat, Art des Dokumentes
+\documentclass[10pt,twoside,a4paper,parskip]{scrartcl}
+% fontsize=12pt  Schriftgroesse in 10, 11 oder 12 Punkt
+% a4paper        Papierformat ist hier A4
+% landscape      Querformat wird natürlich unterstützt ;-)
+% parskip        Absatzabstand anstatt Einzüge
+% draft          Der Entwurfsmodus deckt Schwächen auf
+% {scrartcl}     Die Dokumentenklasse book, report, article
+%                oder fürs deutsche scrbook, scrreprt, scrartcl
+
+
+%Einstellungen der Seitenränder
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=1cm,includeheadfoot]{geometry}
+
+% Sprache, Zeichensatz, packages
+\usepackage[utf8]{inputenc} % Für automatische erkennung von umluate
+\usepackage[ngerman]{babel,varioref} %  Deutsche rechtschribung
+\usepackage{amssymb,amsmath,fancybox,graphicx,lastpage,wrapfig,fancyhdr,hyperref}
+
+
+% für VHDL-code Ausgabe
+\usepackage{listings}
+
+
+%Farben für tabelle
+\usepackage{color, colortbl}
+\definecolor{Gray}{gray}{0.9}
+\definecolor{LightCyan}{rgb}{0.88,1,1}
+%\cellcolor{Farbe} für Farben einer Zelle
+%\rowcolor{Farbe}  für Farben einer Zeile
+
+%Schriftarten
+%http://www.tug.dk/FontCatalogue/arial/
+\usepackage[scaled]{uarial}
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+
+%tabularx package
+%http://mirror.switch.ch/ftp/mirror/tex/macros/latex/required/tools/tabularx.pdf
+%\usepackage{tabularx}
+%tabularx: Damit inhalt der Tabelle zentriert ist
+%\renewcommand{\tabularxcolumn}[1]{>{\normalsize\centering\arraybackslash}m{#1}}
+%aufhebender Befehl
+%\def\tabularxcolumn#1{p{#1}}
+
+\usepackage{multirow} % für Tabelle
+
+
+%pdf info
+\hypersetup{pdfauthor={\authorinfo},pdftitle={\titleinfo},colorlinks=false}
+\author{\authorinfo}
+\title{\titleinfo}
+
+%Kopf- und Fusszeile
+\pagestyle{fancy}
+\fancyhf{}
+%Linien oben und unten
+\renewcommand{\headrulewidth}{0.5pt} 
+\renewcommand{\footrulewidth}{0.5pt}
+
+\fancyhead[L]{\titleinfo{ }\tiny{(\versioninfo)}}
+%Kopfzeile rechts bzw. aussen
+\fancyhead[R]{Seite \thepage { }von \pageref{LastPage}}
+%Fusszeile links bzw. innen
+\fancyfoot[L]{\footnotesize{\authorinfo}}
+%Fusszeile mitte bzw. innen
+\fancyfoot[C]{\footnotesize{\verbesserung}}
+%Fusszeile rechts bzw. ausen
+\fancyfoot[R]{\footnotesize{\today}}

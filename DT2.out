@@ -1,0 +1,21 @@
+\BOOKMARK [1][-]{section.1}{Grundlagen Digitaltechnik II}{}% 1
+\BOOKMARK [1][-]{section.2}{Digitaler Designe-Flow}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Desigenprozess}{section.2}% 3
+\BOOKMARK [1][-]{section.3}{VHDL}{}% 4
+\BOOKMARK [1][-]{section.4}{Key Concept I Hierarchie und konektivit\344t}{}% 5
+\BOOKMARK [2][-]{subsection.4.1}{Library}{section.4}% 6
+\BOOKMARK [2][-]{subsection.4.2}{Entity}{section.4}% 7
+\BOOKMARK [2][-]{subsection.4.3}{Architecture}{section.4}% 8
+\BOOKMARK [1][-]{section.5}{Key Concept II Nebenl\344ufige Prozesse und Prozessiteration}{}% 9
+\BOOKMARK [2][-]{subsection.5.1}{Signale}{section.5}% 10
+\BOOKMARK [2][-]{subsection.5.2}{Nebenl\344ufigkeit Prozesse}{section.5}% 11
+\BOOKMARK [2][-]{subsection.5.3}{Sequentielle Schaltung}{section.5}% 12
+\BOOKMARK [2][-]{subsection.5.4}{Endliche Z-Maschinen}{section.5}% 13
+\BOOKMARK [1][-]{section.6}{Key Concept III Diskreter Ersatz f\374r elektrische Signale}{}% 14
+\BOOKMARK [2][-]{subsection.6.1}{Busse}{section.6}% 15
+\BOOKMARK [2][-]{subsection.6.2}{Codierungsempfehlung}{section.6}% 16
+\BOOKMARK [1][-]{section.7}{Arithmetick und Datentypen}{}% 17
+\BOOKMARK [2][-]{subsection.7.1}{Datentypen}{section.7}% 18
+\BOOKMARK [1][-]{section.8}{Key Concept IV Zeitliche Darstellung bei Simulation}{}% 19
+\BOOKMARK [1][-]{section.9}{Key Concept V Parametisierbarkeit von Modellen}{}% 20
+\BOOKMARK [1][-]{section.10}{Beispiele}{}% 21
